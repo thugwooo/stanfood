@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:stanfood/controllers/screen_controller.dart';
-import 'package:stanfood/views/sign_screen/login_screen.dart';
 import '../components/style.dart';
+import '../constants/color_constant.dart';
+import '../routes/app_routes.dart';
 
-class SplashScreen extends StatelessWidget {
-  SplashScreen({super.key});
+class SplashView extends StatelessWidget {
+  SplashView({super.key});
   final screen_controller = Get.put(Screen_Controller());
   final animated_time = 1500;
   @override
@@ -23,7 +24,7 @@ class SplashScreen extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                color: sub_yellow,
+                color: AppColor().primary2,
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: animated_time),
@@ -34,7 +35,7 @@ class SplashScreen extends StatelessWidget {
                   width: 720.w,
                   height: 720.h,
                   decoration: BoxDecoration(
-                    color: main_yellow,
+                    color: AppColor().primary,
                     borderRadius: BorderRadius.circular(360.w),
                   ),
                 ),
@@ -69,7 +70,7 @@ class SplashScreen extends StatelessWidget {
             ],
           ),
           onTap: () {
-            Get.off(LoginScreen());
+            Get.toNamed(Routes.app);
           },
         ),
       ),
