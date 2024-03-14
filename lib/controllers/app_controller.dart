@@ -11,10 +11,10 @@ class AppController extends GetxController {
   RxInt pageIndex = 0.obs;
   List<int> pageHistory = [0];
 
-  Rx<Color> backgroundColor = (Colors.white).obs;
+  Rx<Color> backgroundColor = (AppColor.whiteText).obs;
 
-  Rx<Color> unSelectedIconColor = (Colors.black).obs;
-  Rx<Color> unSelectedTextColor = (Colors.black).obs;
+  Rx<Color> unSelectedIconColor = (AppColor.blackText).obs;
+  Rx<Color> unSelectedTextColor = (AppColor.blackText).obs;
 
   DateTime? backbuttonpressedTime;
 
@@ -32,8 +32,8 @@ class AppController extends GetxController {
         backbuttonpressedTime = currentTime;
         Fluttertoast.showToast(
           msg: "뒤로 버튼을 한번 더 누르시면 종료 됩니다.",
-          backgroundColor: Colors.black.withOpacity(0.5),
-          textColor: Colors.white,
+          backgroundColor: AppColor.blackText.withOpacity(0.5),
+          textColor: AppColor.whiteText,
           toastLength: Toast.LENGTH_SHORT,
         );
         return false;
@@ -48,22 +48,22 @@ class AppController extends GetxController {
 
   void setWhiteTheme() {
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark, systemNavigationBarColor: Colors.white),
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark, systemNavigationBarColor: AppColor.whiteText),
     );
-    backgroundColor(Colors.white);
+    backgroundColor(AppColor.whiteText);
 
-    unSelectedIconColor(Colors.black);
-    unSelectedTextColor(Colors.black);
+    unSelectedIconColor(AppColor.blackText);
+    unSelectedTextColor(AppColor.blackText);
   }
 
   void setDartTheme() {
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light, systemNavigationBarColor: Colors.black),
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light, systemNavigationBarColor: AppColor.blackText),
     );
-    backgroundColor(Colors.black);
+    backgroundColor(AppColor.blackText);
 
-    unSelectedIconColor(Colors.white);
-    unSelectedTextColor(Colors.white);
+    unSelectedIconColor(AppColor.whiteText);
+    unSelectedTextColor(AppColor.whiteText);
   }
 
   void changePage(index) {

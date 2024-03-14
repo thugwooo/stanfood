@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:stanfood/routes/app_pages.dart';
 import 'package:stanfood/screens/splash_view.dart';
 
+import 'constants/color_constant.dart';
+
 void main() async {
   runApp(MyApp());
 }
@@ -20,6 +22,14 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             fontFamily: 'NotoSansKR',
+            appBarTheme: AppBarTheme(
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              iconTheme: IconThemeData(
+                color: AppColor.blackText,
+              ),
+              titleTextStyle: TextStyle(color: AppColor.blackText),
+            ),
           ),
           title: 'stanfood',
           getPages: AppPages.routes,
