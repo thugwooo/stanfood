@@ -8,7 +8,6 @@ import 'constants/color_constant.dart';
 
 class App extends GetView<AppController> {
   App({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
@@ -16,6 +15,7 @@ class App extends GetView<AppController> {
             index: controller.pageIndex.value,
             children: [
               HomeView(),
+              Container(),
               RegisterView(),
             ],
           ),
@@ -41,6 +41,13 @@ class App extends GetView<AppController> {
                     child: Icon(Icons.home),
                   ),
                   label: '홈',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 2.0),
+                    child: Icon(Icons.map),
+                  ),
+                  label: '지도',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
