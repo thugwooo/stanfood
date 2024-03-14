@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 import 'package:stanfood/app_binding.dart';
-import 'package:stanfood/routes/app_routes.dart';
 import 'package:stanfood/screens/home/home_view.dart';
 import 'package:stanfood/screens/login/sign_in_view.dart';
+import 'package:stanfood/screens/maps/maps_view.dart';
 import 'package:stanfood/screens/register/register_view.dart';
 import 'package:stanfood/screens/splash_view.dart';
 
 import '../app.dart';
+import 'app_routes.dart';
 
 class AppPages {
   static const initial = Routes.splash;
@@ -32,6 +33,10 @@ class AppPages {
     GetPage(
       name: Routes.register,
       page: () => RegisterView(),
+    ),
+    GetPage(
+      name: Routes.map,
+      page: () => MapsView(),
     ),
   ];
 }

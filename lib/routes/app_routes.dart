@@ -4,6 +4,7 @@ abstract class Routes {
   static const app = '/app';
   static const splash = '/';
   static const home = '/home';
+  static const map = '/map';
   static const signIn = '/sign-in';
 
   // register
