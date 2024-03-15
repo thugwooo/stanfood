@@ -14,7 +14,7 @@ class SignInView extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Container(color: AppColor().primary2),
+          Container(color: AppColor.primary2),
           Positioned(
             left: -145.w,
             top: 315.h,
@@ -22,7 +22,7 @@ class SignInView extends StatelessWidget {
               width: 720.w,
               height: 720.h,
               decoration: BoxDecoration(
-                color: AppColor().primary,
+                color: AppColor.primary,
                 borderRadius: BorderRadius.circular(360.w),
               ),
             ),
@@ -116,7 +116,7 @@ class SignInView extends StatelessWidget {
             width: 316.w,
             height: 58.h,
             decoration: BoxDecoration(
-              color: AppColor().primary,
+              color: AppColor.primary,
               borderRadius: BorderRadius.circular(8.w),
             ),
             child: Center(
@@ -141,7 +141,7 @@ class SignInView extends StatelessWidget {
             children: [
               Icon(Icons.arrow_back_ios),
               Text('로그인', style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.w500)),
-              Icon(Icons.arrow_back_ios, color: AppColor().primary2),
+              Icon(Icons.arrow_back_ios, color: AppColor.primary2),
             ],
           ),
         ),

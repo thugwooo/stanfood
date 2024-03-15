@@ -24,7 +24,7 @@ class SplashView extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                color: AppColor().primary2,
+                color: AppColor.primary2,
               ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: animated_time),
@@ -35,7 +35,7 @@ class SplashView extends StatelessWidget {
                   width: 720.w,
                   height: 720.h,
                   decoration: BoxDecoration(
-                    color: AppColor().primary,
+                    color: AppColor.primary,
                     borderRadius: BorderRadius.circular(360.w),
                   ),
                 ),

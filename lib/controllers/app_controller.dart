@@ -94,5 +94,5 @@ class AppController extends GetxController {
     pageHistory.add(index);
   }
 
-  Color getSelectedMenuColor(int index) => pageIndex.value == index ? AppColor().primary : unSelectedIconColor.value;
+  Color getSelectedMenuColor(int index) => pageIndex.value == index ? AppColor.primary : unSelectedIconColor.value;
 }

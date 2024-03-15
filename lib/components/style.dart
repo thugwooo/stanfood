@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 final width = 430.w;
