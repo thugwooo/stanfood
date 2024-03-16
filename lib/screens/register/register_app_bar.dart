@@ -49,7 +49,7 @@ class RegisterAppBar extends StatelessWidget {
                 labelPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                 tabs: [
                   _tabBarButton(title: '메인'),
-                  _tabBarButton(title: '스탠'),
+                  _tabBarButton(title: '최애'),
                   _tabBarButton(title: '식당'),
                   _tabBarButton(title: '방송'),
                   _tabBarButton(title: '먹방'),

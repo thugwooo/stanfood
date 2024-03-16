@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:stanfood/components/utils.dart';
 import 'package:stanfood/constants/enum_constant.dart';
 import '../../../../components/app_utils.dart';
+import '../../../../modules/common/custom_button.dart';
 import '../../../../modules/common/custom_form_field.dart';
 import '../../../../modules/common/image_data.dart';
 import '../../../../constants/color_constant.dart';
@@ -18,7 +19,15 @@ class RegisterTabStan extends StatefulWidget {
 }
 
 class _RegisterTabStanState extends State<RegisterTabStan> {
-  late String _selectedJob;
+  String _name = '';
+  String _selectedJob = '직업을 선택해주세요';
+  late List<JobType> _jobType;
+  String _youtubeName = '';
+  String _youtubeAddress = '';
+  String bloggerName = '';
+  String _blogAddress = '';
+  String _snsAddress = '';
+
   bool _isJobSelected = false;
   bool _isJobTapped = false;
 
@@ -27,7 +36,6 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
   @override
   void initState() {
     super.initState();
-    _selectedJob = '직업을 선택해주세요';
   }
 
   String? _validateTextField(String? value, {RegExp? regExp, String? regExpText = '한글, 영문, 숫자만 입력 가능합니다.', int? maxLength}) {
@@ -52,22 +60,65 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _nameField(),
-              _jobField(context),
-              _channelField(),
-            ].divide(const SizedBox(height: 12)).addToStart(const SizedBox(height: 24)).addToEnd(const SizedBox(height: 42))),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          elevation: 20,
+          child: CustomButton(
+            onTap: () {
+              // TODO; 등록하기 버튼 클릭 시 로직 추가
+              // _name;
+              // _jobType;
+              // _channel;
+            },
+            text: '등록하기',
+          ),
+        ),
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _nameField(),
+                  _jobField(context),
+                  _infoField(),
+                ].divide(const SizedBox(height: 12)).addToStart(const SizedBox(height: 24)).addToEnd(const SizedBox(height: 42))),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _channelField() {
+  Widget _infoField() {
+    if (_isJobTapped && _isJobSelected) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        if (_jobType.contains(JobType.Youtuber))
+          Column(
+            children: [
+              _channelField(channelName: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', channel: _youtubeName),
+              _channelField(channelName: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', channel: _youtubeAddress),
+            ],
+          ),
+        if (_jobType.contains(JobType.Entertainer)) SizedBox(),
+        if (_jobType.contains(JobType.Blogger))
+          Column(
+            children: [
+              _channelField(channelName: '블로그명', hintText: '블로그명을 입력해주세요', channel: _blogAddress),
+              _channelField(channelName: '블로그주소', hintText: '블로그 주소를 입력해주세요', channel: _blogAddress),
+            ],
+          ),
+        if (_jobType.contains(JobType.Influencer)) _channelField(channelName: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', channel: _snsAddress),
+      ]);
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  Widget _channelField({required String channelName, required String hintText, required String channel}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,14 +126,17 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
           height: 44,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Text(
-            '채널명',
+            channelName,
             style: AppTextStyles.GS_subbody.copyWith(),
           ),
         ),
         CustomFormField(
           validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
-          hintText: '채널명을 입력해주세요',
+          hintText: hintText,
           maxLines: 1,
+          onChanged: (value) {
+            channel = value;
+          },
         ),
       ],
     );
@@ -115,10 +169,10 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
                   Expanded(
                     child: JobSelectView(
                       isToastHidden: true,
-                      onJobSelected: (selectedJob) {
+                      onJobSelected: (selectedJobs) {
                         setState(() {
-                          _selectedJob = selectedJob.description();
-                          print(_selectedJob);
+                          _selectedJob = selectedJobs.map((job) => job.description()).join(', ');
+                          _jobType = selectedJobs;
                         });
                         _isJobSelected = true;
                       },
@@ -168,7 +222,7 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
           height: 44,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Text(
-            'Stan 이름',
+            '최애 이름',
             style: AppTextStyles.GS_subbody.copyWith(),
           ),
         ),
@@ -176,6 +230,9 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
           validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
           hintText: '이름을 입력해주세요',
           maxLines: 1,
+          onChanged: (value) {
+            _name = value;
+          },
         ),
       ],
     );

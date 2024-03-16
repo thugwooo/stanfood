@@ -12,7 +12,7 @@ import '../../../../../constants/style_constant.dart';
 import '../../../../../modules/common/custom_button.dart';
 
 class JobSelectView extends StatelessWidget {
-  final void Function(JobType selectedJob) onJobSelected;
+  final void Function(List<JobType> selectedJob) onJobSelected;
   final bool? isToastHidden;
 
   JobSelectView({
@@ -43,7 +43,7 @@ class JobSelectView extends StatelessWidget {
           elevation: 20,
           child: CustomButton(
             onTap: () {
-              onJobSelected(jobList[_registerController.jobType.value.index].type);
+              onJobSelected(_registerController.jobType);
               Fluttertoast.showToast(
                 msg: "직업이 선택되었습니다.",
                 backgroundColor: AppColor.blackText.withOpacity(0.5),
@@ -79,7 +79,7 @@ class JobSelectView extends StatelessWidget {
           ),
           const SizedBox(height: 16.0),
           Text(
-            'Stan의 직업을 선택해주세요.',
+            '최대의 직업을 선택해주세요.',
             style: AppTextStyles.SYS_subbody.copyWith(
               color: AppColor.lightLabelSecondaryColor,
               fontWeight: FontWeight.w400,
@@ -106,9 +106,7 @@ class JobSelectView extends StatelessWidget {
           final job = jobList[index];
           return GestureDetector(
             onTap: () {
-              print(index);
-              print(jobList[index].type);
-              _registerController.jobType.value = jobList[index].type;
+              _registerController.selectJobType(job.type);
             },
             child: Obx(
               () => Stack(
@@ -147,7 +145,7 @@ class JobSelectView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        gradient: index == _registerController.jobType.value.index
+                        gradient: _registerController.jobType.contains(job.type)
                             ? LinearGradient(
                                 colors: AppGradients.gradientHealthy.colors.map((e) => e.withOpacity(.9)).toList(),
                               )
@@ -156,7 +154,7 @@ class JobSelectView extends StatelessWidget {
                                 Colors.transparent,
                               ]),
                       ),
-                      child: index == _registerController.jobType.value.index
+                      child: _registerController.jobType.contains(job.type)
                           ? Stack(
                               children: [
                                 Center(
