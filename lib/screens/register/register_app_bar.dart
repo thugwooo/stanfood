@@ -17,11 +17,11 @@ class RegisterAppBar extends StatelessWidget {
       child: AppBar(
         elevation: 0,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0XFFA8C3F8),
-                Color(0XFFC9E8F9),
+                AppColor.primary,
+                AppColor.primary,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -49,7 +49,7 @@ class RegisterAppBar extends StatelessWidget {
                 labelPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                 tabs: [
                   _tabBarButton(title: '메인'),
-                  _tabBarButton(title: '스탠'),
+                  _tabBarButton(title: '최애'),
                   _tabBarButton(title: '식당'),
                   _tabBarButton(title: '방송'),
                   _tabBarButton(title: '먹방'),
