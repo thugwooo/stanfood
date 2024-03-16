@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stanfood/components/utils.dart';
+import 'package:stanfood/constants/enum_constant.dart';
 import '../../../../components/app_utils.dart';
 import '../../../../modules/common/custom_form_field.dart';
 import '../../../../modules/common/image_data.dart';
@@ -58,94 +59,125 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 44,
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    child: Text(
-                      'Stan 이름',
-                      style: AppTextStyles.GS_subbody.copyWith(),
-                    ),
-                  ),
-                  CustomFormField(
-                    validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
-                    hintText: '이름을 입력해주세요',
-                    maxLines: 1,
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 44,
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    child: Text(
-                      '직업',
-                      style: AppTextStyles.GS_subbody.copyWith(),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isJobTapped = true;
-                      });
-                      AppUtil.showModalBottom(
-                        context: context,
-                        height: Get.height * 0.95,
-                        page: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            IconButton(onPressed: () => Get.back(), icon: ImageData(icon: IconPath.collapsed)),
-                            Expanded(
-                              child: JobSelectView(
-                                isToastHidden: true,
-                                onJobSelected: (selectedJob) {
-                                  setState(() {
-                                    _selectedJob = selectedJob;
-                                  });
-                                  _isJobSelected = true;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(width: .3, color: AppColor.lightSeparatorNonThickColor),
-                      ),
-                      height: 52,
-                      child: Row(
-                        children: [
-                          Text(
-                            _selectedJob,
-                            style: AppTextStyles.SYS_subbody.copyWith(
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (!_isJobSelected && _isJobTapped)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                      child: Text(
-                        '직업 필드가 비어있을 경우 입력해주시길 바랍니다.',
-                        style: TextStyle(color: Colors.red.shade800, fontSize: 12.0),
-                      ),
-                    ),
-                ],
-              ),
+              _nameField(),
+              _jobField(context),
+              _channelField(),
             ].divide(const SizedBox(height: 12)).addToStart(const SizedBox(height: 24)).addToEnd(const SizedBox(height: 42))),
       ),
+    );
+  }
+
+  Widget _channelField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 44,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Text(
+            '채널명',
+            style: AppTextStyles.GS_subbody.copyWith(),
+          ),
+        ),
+        CustomFormField(
+          validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
+          hintText: '채널명을 입력해주세요',
+          maxLines: 1,
+        ),
+      ],
+    );
+  }
+
+  Column _jobField(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 44,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Text(
+            '직업',
+            style: AppTextStyles.GS_subbody.copyWith(),
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            setState(() {
+              _isJobTapped = true;
+            });
+            AppUtil.showModalBottom(
+              context: context,
+              height: Get.height * 0.95,
+              page: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(onPressed: () => Get.back(), icon: ImageData(icon: IconPath.collapsed)),
+                  Expanded(
+                    child: JobSelectView(
+                      isToastHidden: true,
+                      onJobSelected: (selectedJob) {
+                        setState(() {
+                          _selectedJob = selectedJob.description();
+                          print(_selectedJob);
+                        });
+                        _isJobSelected = true;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(width: .3, color: AppColor.lightSeparatorNonThickColor),
+            ),
+            height: 52,
+            child: Row(
+              children: [
+                Text(
+                  _selectedJob,
+                  style: AppTextStyles.SYS_subbody.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const Spacer(),
+              ],
+            ),
+          ),
+        ),
+        if (!_isJobSelected && _isJobTapped)
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+            child: Text(
+              '직업 필드가 비어있을 경우 입력해주시길 바랍니다.',
+              style: TextStyle(color: Colors.red.shade800, fontSize: 12.0),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Column _nameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 44,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Text(
+            'Stan 이름',
+            style: AppTextStyles.GS_subbody.copyWith(),
+          ),
+        ),
+        CustomFormField(
+          validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
+          hintText: '이름을 입력해주세요',
+          maxLines: 1,
+        ),
+      ],
     );
   }
 }

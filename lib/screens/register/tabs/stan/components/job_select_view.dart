@@ -1,74 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:stanfood/constants/enum_constant.dart';
 import 'package:stanfood/constants/icon_constant.dart';
 
+import '../../../../../controllers/register/register_controller.dart';
+import '../../../../../data/models/job_model.dart';
 import '../../../../../modules/common/image_data.dart';
 import '../../../../../constants/color_constant.dart';
 import '../../../../../constants/style_constant.dart';
 import '../../../../../modules/common/custom_button.dart';
 
-void main(List<String> args) {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: const Text('JobSelectCityPage'),
-      ),
-      body: JobSelectView(
-        onJobSelected: (val) {},
-      ),
-    ),
-  ));
-}
-
-class Job {
-  final String name;
-  final String icon;
-  Job({required this.name, required this.icon});
-
-  factory Job.fromJson(Map<String, dynamic> json) {
-    return Job(
-      name: json['name'],
-      icon: json['icon'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'icon': icon,
-    };
-  }
-}
-
-class JobSelectView extends StatefulWidget {
-  final void Function(String selectedJob) onJobSelected;
+class JobSelectView extends StatelessWidget {
+  final void Function(JobType selectedJob) onJobSelected;
   final bool? isToastHidden;
 
-  const JobSelectView({
+  JobSelectView({
     Key? key,
     required this.onJobSelected,
     this.isToastHidden,
   }) : super(key: key);
 
-  @override
-  _JobPageState createState() => _JobPageState();
-}
+  final _registerController = Get.put(RegisterController());
 
-class _JobPageState extends State<JobSelectView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  String _selectedJob = '';
-
-  List<Job> jobList = [
-    Job(name: '유튜버', icon: IconPath.youtuber),
-    Job(name: '인플루언서', icon: IconPath.influencer),
-    Job(name: '연예인', icon: IconPath.entertainer),
-    Job(name: '블로거', icon: IconPath.blogger),
+  final List<Job> jobList = [
+    Job(type: JobType.Youtuber, icon: IconPath.youtuber),
+    Job(type: JobType.Entertainer, icon: IconPath.entertainer),
+    Job(type: JobType.Blogger, icon: IconPath.blogger),
+    Job(type: JobType.Influencer, icon: IconPath.influencer),
   ];
 
   @override
@@ -84,7 +43,7 @@ class _JobPageState extends State<JobSelectView> {
           elevation: 20,
           child: CustomButton(
             onTap: () {
-              widget.onJobSelected(_selectedJob);
+              onJobSelected(jobList[_registerController.jobType.value.index].type);
               Fluttertoast.showToast(
                 msg: "직업이 선택되었습니다.",
                 backgroundColor: AppColor.blackText.withOpacity(0.5),
@@ -131,40 +90,6 @@ class _JobPageState extends State<JobSelectView> {
     );
   }
 
-  Widget _buildListView() {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: jobList.map((e) => e.name).toSet().toList().length,
-      // itemCount: _countries.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16.0),
-            _buildJobText(jobList[index]),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildJobText(Job job) {
-    return Row(
-      children: [
-        ImageData(
-          icon: IconPath.collapsed,
-          width: 42.w,
-        ),
-        Text(
-          job.name,
-          style: AppTextStyles.NN_callout.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildJobGrid() {
     return GridView.builder(
         shrinkWrap: true,
@@ -181,85 +106,87 @@ class _JobPageState extends State<JobSelectView> {
           final job = jobList[index];
           return GestureDetector(
             onTap: () {
-              setState(() {
-                _selectedJob = job.name;
-              });
+              print(index);
+              print(jobList[index].type);
+              _registerController.jobType.value = jobList[index].type;
             },
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColor.primary,
-                      image: DecorationImage(
-                        image: AssetImage(
-                          job.icon,
+            child: Obx(
+              () => Stack(
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColor.primary,
+                        image: DecorationImage(
+                          image: AssetImage(
+                            job.icon,
+                          ),
+                          fit: BoxFit.cover,
                         ),
-                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 13),
-                          child: Text(
-                            job.name,
-                            style: AppTextStyles.NN_callout.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppColor.whiteText,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 13),
+                            child: Text(
+                              job.type.description(),
+                              style: AppTextStyles.NN_callout.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppColor.whiteText,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      gradient: job.name == _selectedJob
-                          ? LinearGradient(
-                              colors: AppGradients.gradientHealthy.colors.map((e) => e.withOpacity(.9)).toList(),
-                            )
-                          : const LinearGradient(colors: [
-                              Colors.transparent,
-                              Colors.transparent,
-                            ]),
-                    ),
-                    child: job.name == _selectedJob
-                        ? Stack(
-                            children: [
-                              Center(
-                                child: ImageData(
-                                  icon: IconPath.check,
-                                  width: 64,
-                                ),
-                              ),
-                              Positioned.fill(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 16, left: 13),
-                                      child: Text(
-                                        job.name,
-                                        style: AppTextStyles.NN_callout.copyWith(fontWeight: FontWeight.w700, color: AppColor.blackText),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: index == _registerController.jobType.value.index
+                            ? LinearGradient(
+                                colors: AppGradients.gradientHealthy.colors.map((e) => e.withOpacity(.9)).toList(),
                               )
-                            ],
-                          )
-                        : Container(),
+                            : const LinearGradient(colors: [
+                                Colors.transparent,
+                                Colors.transparent,
+                              ]),
+                      ),
+                      child: index == _registerController.jobType.value.index
+                          ? Stack(
+                              children: [
+                                Center(
+                                  child: ImageData(
+                                    icon: IconPath.check,
+                                    width: 64,
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 16, left: 13),
+                                        child: Text(
+                                          job.type.description(),
+                                          style: AppTextStyles.NN_callout.copyWith(fontWeight: FontWeight.w700, color: AppColor.blackText),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          : Container(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         });
