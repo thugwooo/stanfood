@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:stanfood/components/utils.dart';
 import 'package:stanfood/constants/enum_constant.dart';
 import '../../../../components/app_utils.dart';
+import '../../../../controllers/register/register_controller.dart';
 import '../../../../modules/common/custom_button.dart';
 import '../../../../modules/common/custom_form_field.dart';
 import '../../../../modules/common/image_data.dart';
@@ -19,9 +20,11 @@ class RegisterTabStan extends StatefulWidget {
 }
 
 class _RegisterTabStanState extends State<RegisterTabStan> {
+  final _formKey = GlobalKey<FormState>();
+  final _registerController = Get.put(RegisterController());
+
   String _name = '';
   String _selectedJob = '직업을 선택해주세요';
-  late List<JobType> _jobType;
   String _youtubeName = '';
   String _youtubeAddress = '';
   String bloggerName = '';
@@ -31,11 +34,14 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
   bool _isJobSelected = false;
   bool _isJobTapped = false;
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
+    if (_registerController.jobType.isNotEmpty) {
+      _selectedJob = _registerController.jobType.map((job) => job.description()).join(', ');
+      _isJobSelected = true;
+      _isJobTapped = true;
+    }
   }
 
   String? _validateTextField(String? value, {RegExp? regExp, String? regExpText = '한글, 영문, 숫자만 입력 가능합니다.', int? maxLength}) {
@@ -70,7 +76,7 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
             onTap: () {
               // TODO; 등록하기 버튼 클릭 시 로직 추가
               // _name;
-              // _jobType;
+              // _registerController.jobType;
               // _channel;
             },
             text: '등록하기',
@@ -96,29 +102,29 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
   Widget _infoField() {
     if (_isJobTapped && _isJobSelected) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (_jobType.contains(JobType.Youtuber))
+        if (_registerController.jobType.contains(JobType.Youtuber))
           Column(
             children: [
-              _channelField(channelName: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', channel: _youtubeName),
-              _channelField(channelName: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', channel: _youtubeAddress),
+              _customField(title: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', channel: _youtubeName),
+              _customField(title: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', channel: _youtubeAddress),
             ],
           ),
-        if (_jobType.contains(JobType.Entertainer)) SizedBox(),
-        if (_jobType.contains(JobType.Blogger))
+        if (_registerController.jobType.contains(JobType.Entertainer)) SizedBox(),
+        if (_registerController.jobType.contains(JobType.Blogger))
           Column(
             children: [
-              _channelField(channelName: '블로그명', hintText: '블로그명을 입력해주세요', channel: _blogAddress),
-              _channelField(channelName: '블로그주소', hintText: '블로그 주소를 입력해주세요', channel: _blogAddress),
+              _customField(title: '블로그명', hintText: '블로그명을 입력해주세요', channel: _blogAddress),
+              _customField(title: '블로그주소', hintText: '블로그 주소를 입력해주세요', channel: _blogAddress),
             ],
           ),
-        if (_jobType.contains(JobType.Influencer)) _channelField(channelName: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', channel: _snsAddress),
+        if (_registerController.jobType.contains(JobType.Influencer)) _customField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', channel: _snsAddress),
       ]);
     } else {
       return const SizedBox();
     }
   }
 
-  Widget _channelField({required String channelName, required String hintText, required String channel}) {
+  Widget _customField({required String title, required String hintText, required String channel}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -126,7 +132,7 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
           height: 44,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Text(
-            channelName,
+            title,
             style: AppTextStyles.GS_subbody.copyWith(),
           ),
         ),
@@ -172,7 +178,6 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
                       onJobSelected: (selectedJobs) {
                         setState(() {
                           _selectedJob = selectedJobs.map((job) => job.description()).join(', ');
-                          _jobType = selectedJobs;
                         });
                         _isJobSelected = true;
                       },
@@ -214,27 +219,7 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
     );
   }
 
-  Column _nameField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 44,
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Text(
-            '최애 이름',
-            style: AppTextStyles.GS_subbody.copyWith(),
-          ),
-        ),
-        CustomFormField(
-          validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
-          hintText: '이름을 입력해주세요',
-          maxLines: 1,
-          onChanged: (value) {
-            _name = value;
-          },
-        ),
-      ],
-    );
+  Widget _nameField() {
+    return _customField(title: '최애 이름', hintText: '이름을 입력해주세요', channel: _name);
   }
 }
