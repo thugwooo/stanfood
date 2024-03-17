@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:stanfood/constants/enum_constant.dart';
 import 'package:stanfood/constants/icon_constant.dart';
 
-import '../../../../../controllers/register/register_controller.dart';
-import '../../../../../data/models/job_model.dart';
-import '../../../../../modules/common/image_data.dart';
-import '../../../../../constants/color_constant.dart';
-import '../../../../../constants/style_constant.dart';
-import '../../../../../modules/common/custom_button.dart';
+import '../../../../controllers/register/register_controller.dart';
+import '../../../../data/models/job_model.dart';
+import '../../../../modules/common/image_data.dart';
+import '../../../../constants/color_constant.dart';
+import '../../../../constants/style_constant.dart';
+import '../../../../modules/common/custom_button.dart';
 
 class JobSelectView extends StatelessWidget {
   final void Function(List<JobType> selectedJob) onJobSelected;
@@ -26,7 +26,6 @@ class JobSelectView extends StatelessWidget {
   final List<Job> jobList = [
     Job(type: JobType.Youtuber, icon: IconPath.youtuber),
     Job(type: JobType.Entertainer, icon: IconPath.entertainer),
-    Job(type: JobType.Blogger, icon: IconPath.blogger),
     Job(type: JobType.Influencer, icon: IconPath.influencer),
   ];
 

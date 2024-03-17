@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stanfood/components/utils.dart';
 import 'package:stanfood/constants/enum_constant.dart';
-import '../../../../components/app_utils.dart';
-import '../../../../controllers/register/register_controller.dart';
-import '../../../../modules/common/custom_button.dart';
-import '../../../../modules/common/custom_form_field.dart';
-import '../../../../modules/common/image_data.dart';
-import '../../../../constants/color_constant.dart';
-import '../../../../constants/icon_constant.dart';
-import '../../../../constants/style_constant.dart';
+import 'package:stanfood/screens/register/tabs/components/register_input_field.dart';
+import 'package:stanfood/screens/register/tabs/components/register_layout.dart';
+import '../../../components/app_utils.dart';
+import '../../../controllers/register/register_controller.dart';
+import '../../../modules/common/custom_form_field.dart';
+import '../../../modules/common/image_data.dart';
+import '../../../constants/color_constant.dart';
+import '../../../constants/icon_constant.dart';
+import '../../../constants/style_constant.dart';
 import 'components/job_select_view.dart';
 
 class RegisterTabStan extends StatefulWidget {
@@ -66,36 +67,13 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        bottomNavigationBar: BottomAppBar(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: 20,
-          child: CustomButton(
-            onTap: () {
-              // TODO; 등록하기 버튼 클릭 시 로직 추가
-              // _name;
-              // _registerController.jobType;
-              // _channel;
-            },
-            text: '등록하기',
-          ),
-        ),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _nameField(),
-                  _jobField(context),
-                  _infoField(),
-                ].divide(const SizedBox(height: 12)).addToStart(const SizedBox(height: 24)).addToEnd(const SizedBox(height: 42))),
-          ),
-        ),
-      ),
+    return RegisterLayout(
+      registerOnTap: () {},
+      children: [
+        _nameField(),
+        _jobField(context),
+        _infoField(),
+      ].divide(const SizedBox(height: 12)).addToStart(const SizedBox(height: 24)).addToEnd(const SizedBox(height: 42)),
     );
   }
 
@@ -105,19 +83,12 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
         if (_registerController.jobType.contains(JobType.Youtuber))
           Column(
             children: [
-              _customField(title: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', channel: _youtubeName),
-              _customField(title: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', channel: _youtubeAddress),
+              RegisterInputField(title: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', onChanged: (value) => _youtubeName = value),
+              RegisterInputField(title: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', onChanged: (value) => _youtubeAddress = value),
             ],
           ),
         if (_registerController.jobType.contains(JobType.Entertainer)) SizedBox(),
-        if (_registerController.jobType.contains(JobType.Blogger))
-          Column(
-            children: [
-              _customField(title: '블로그명', hintText: '블로그명을 입력해주세요', channel: _blogAddress),
-              _customField(title: '블로그주소', hintText: '블로그 주소를 입력해주세요', channel: _blogAddress),
-            ],
-          ),
-        if (_registerController.jobType.contains(JobType.Influencer)) _customField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', channel: _snsAddress),
+        if (_registerController.jobType.contains(JobType.Influencer)) RegisterInputField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', onChanged: (value) => _snsAddress = value),
       ]);
     } else {
       return const SizedBox();
@@ -174,7 +145,6 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
                   IconButton(onPressed: () => Get.back(), icon: ImageData(icon: IconPath.collapsed)),
                   Expanded(
                     child: JobSelectView(
-                      isToastHidden: true,
                       onJobSelected: (selectedJobs) {
                         setState(() {
                           _selectedJob = selectedJobs.map((job) => job.description()).join(', ');
@@ -220,6 +190,10 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
   }
 
   Widget _nameField() {
-    return _customField(title: '최애 이름', hintText: '이름을 입력해주세요', channel: _name);
+    return RegisterInputField(
+      title: '최애 이름',
+      hintText: '이름을 입력해주세요',
+      onChanged: (value) => _name = value,
+    );
   }
 }
