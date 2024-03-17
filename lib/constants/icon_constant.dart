@@ -4,6 +4,9 @@ class IconPath {
   static String get entertainer => 'assets/icons/entertainer.png';
   static String get blogger => 'assets/icons/blogger.png';
 
+  static String get tv => 'assets/icons/tv.png';
+  static String get youtube => 'assets/icons/youtube.png';
+
   static String get collapsed => 'assets/icons/collapsed.svg';
   static String get check => 'assets/icons/check.svg';
 }
