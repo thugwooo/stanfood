@@ -79,44 +79,23 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
 
   Widget _infoField() {
     if (_isJobTapped && _isJobSelected) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (_registerController.jobType.contains(JobType.Youtuber))
-          Column(
-            children: [
-              RegisterInputField(title: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', onChanged: (value) => _youtubeName = value),
-              RegisterInputField(title: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', onChanged: (value) => _youtubeAddress = value),
-            ],
-          ),
-        if (_registerController.jobType.contains(JobType.Entertainer)) SizedBox(),
-        if (_registerController.jobType.contains(JobType.Influencer)) RegisterInputField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', onChanged: (value) => _snsAddress = value),
-      ]);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_registerController.jobType.contains(JobType.Youtuber))
+            Column(
+              children: [
+                RegisterInputField(title: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', onChanged: (value) => _youtubeName = value),
+                RegisterInputField(title: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', onChanged: (value) => _youtubeAddress = value),
+              ],
+            ),
+          if (_registerController.jobType.contains(JobType.Entertainer)) SizedBox(),
+          if (_registerController.jobType.contains(JobType.Influencer)) RegisterInputField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', onChanged: (value) => _snsAddress = value),
+        ],
+      );
     } else {
       return const SizedBox();
     }
-  }
-
-  Widget _customField({required String title, required String hintText, required String channel}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 44,
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Text(
-            title,
-            style: AppTextStyles.GS_subbody.copyWith(),
-          ),
-        ),
-        CustomFormField(
-          validator: (value) => _validateTextField(value, regExp: RegExp(r"^[ㄱ-ㅎ가-힣0-9a-zA-Z\s+]*$"), maxLength: 64),
-          hintText: hintText,
-          maxLines: 1,
-          onChanged: (value) {
-            channel = value;
-          },
-        ),
-      ],
-    );
   }
 
   Column _jobField(BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:stanfood/screens/register/tabs/register_tab_broadcast.dart';
 import 'package:stanfood/screens/register/tabs/register_tab_main.dart';
 import 'package:stanfood/screens/register/tabs/register_tab_mukbang.dart';
 import 'package:stanfood/screens/register/tabs/register_tab_restaurant.dart';
-import 'package:stanfood/screens/register/tabs/stan/register_tab_stan.dart';
+import 'package:stanfood/screens/register/tabs/register_tab_stan.dart';
 
 import '../../controllers/register/register_controller.dart';
 

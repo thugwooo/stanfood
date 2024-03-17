@@ -5,6 +5,7 @@ import 'package:stanfood/constants/enum_constant.dart';
 class RegisterController extends GetxController with GetSingleTickerProviderStateMixin {
   late TabController tabController;
   RxList<JobType> jobType = <JobType>[].obs;
+  RxList<BroadcastType> broadcastType = <BroadcastType>[].obs;
 
   @override
   void onInit() {
@@ -17,6 +18,14 @@ class RegisterController extends GetxController with GetSingleTickerProviderStat
       jobType.remove(type);
     } else {
       jobType.add(type);
+    }
+  }
+
+  void selectBroadcastType(BroadcastType type) {
+    if (broadcastType.contains(type)) {
+      broadcastType.remove(type);
+    } else {
+      broadcastType.add(type);
     }
   }
 }

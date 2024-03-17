@@ -1,10 +1,13 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:stanfood/screens/register/tabs/components/register_layout.dart';
 
 class RegisterTabRestaurant extends StatelessWidget {
-  const RegisterTabRestaurant({super.key});
-
+  RegisterTabRestaurant({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return RegisterLayout(
+      registerOnTap: () {},
+      children: [],
+    );
   }
 }
