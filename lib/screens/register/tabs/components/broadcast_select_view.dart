@@ -7,19 +7,21 @@ import '../../../../constants/color_constant.dart';
 import '../../../../constants/enum_constant.dart';
 import '../../../../constants/style_constant.dart';
 import '../../../../controllers/register/register_controller.dart';
-import '../../../../data/models/broadcast_model.dart';
+import '../../../../data/models/channel_model.dart';
 import '../../../../modules/common/custom_button.dart';
 import '../../../../modules/common/image_data.dart';
 
 class BroadcastSelectView extends StatelessWidget {
   BroadcastSelectView({super.key, required this.onSelected});
-  final void Function(List<BroadcastType> selectedBroadcast) onSelected;
+  final void Function(ChannelType selectedChannel) onSelected;
 
   final _registerController = Get.put(RegisterController());
 
-  final List<Broadcast> broadcastList = [
-    Broadcast(type: BroadcastType.TV, icon: IconPath.tv),
-    Broadcast(type: BroadcastType.Youtube, icon: IconPath.youtube),
+  final List<Channel> broadcastList = [
+    Channel(type: ChannelType.TV, icon: IconPath.tv),
+    Channel(type: ChannelType.Youtube, icon: IconPath.youtube),
+    Channel(type: ChannelType.SNS, icon: IconPath.sns),
+    Channel(type: ChannelType.Blog, icon: IconPath.blog),
   ];
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class BroadcastSelectView extends StatelessWidget {
           elevation: 20,
           child: CustomButton(
             onTap: () {
-              onSelected(_registerController.broadcastType);
+              onSelected(_registerController.selectedChannelType.value);
               Fluttertoast.showToast(
                 msg: "방송이 선택되었습니다.",
                 backgroundColor: AppColor.blackText.withOpacity(0.5),
@@ -97,7 +99,7 @@ class BroadcastSelectView extends StatelessWidget {
           final broadcast = broadcastList[index];
           return GestureDetector(
             onTap: () {
-              _registerController.selectBroadcastType(broadcast.type);
+              _registerController.selectedChannelType(broadcast.type);
             },
             child: Obx(
               () => Stack(
@@ -136,7 +138,7 @@ class BroadcastSelectView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        gradient: _registerController.broadcastType.contains(broadcast.type)
+                        gradient: _registerController.selectedChannelType.value == broadcast.type
                             ? LinearGradient(
                                 colors: AppGradients.gradientHealthy.colors.map((e) => e.withOpacity(.9)).toList(),
                               )
@@ -145,7 +147,7 @@ class BroadcastSelectView extends StatelessWidget {
                                 Colors.transparent,
                               ]),
                       ),
-                      child: _registerController.broadcastType.contains(broadcast.type)
+                      child: _registerController.selectedChannelType.value == broadcast.type
                           ? Stack(
                               children: [
                                 Center(

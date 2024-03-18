@@ -6,12 +6,11 @@ import 'package:stanfood/screens/register/tabs/components/register_input_field.d
 import 'package:stanfood/screens/register/tabs/components/register_layout.dart';
 import '../../../components/app_utils.dart';
 import '../../../controllers/register/register_controller.dart';
-import '../../../modules/common/custom_form_field.dart';
 import '../../../modules/common/image_data.dart';
 import '../../../constants/color_constant.dart';
 import '../../../constants/icon_constant.dart';
 import '../../../constants/style_constant.dart';
-import 'components/job_select_view.dart';
+import 'components/stan_channel_select_view.dart';
 
 class RegisterTabStan extends StatefulWidget {
   RegisterTabStan({super.key});
@@ -32,16 +31,16 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
   String _blogAddress = '';
   String _snsAddress = '';
 
-  bool _isJobSelected = false;
-  bool _isJobTapped = false;
+  bool _isChannelSelected = false;
+  bool _isChannelTapped = false;
 
   @override
   void initState() {
     super.initState();
-    if (_registerController.jobType.isNotEmpty) {
-      _selectedJob = _registerController.jobType.map((job) => job.description()).join(', ');
-      _isJobSelected = true;
-      _isJobTapped = true;
+    if (_registerController.selectedChannelTypes.isNotEmpty) {
+      _selectedJob = _registerController.selectedChannelTypes.map((job) => job.description()).join(', ');
+      _isChannelSelected = true;
+      _isChannelTapped = true;
     }
   }
 
@@ -71,26 +70,27 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
       registerOnTap: () {},
       children: [
         _nameField(),
-        _jobField(context),
+        _channelField(context),
         _infoField(),
       ].divide(const SizedBox(height: 12)).addToStart(const SizedBox(height: 24)).addToEnd(const SizedBox(height: 42)),
     );
   }
 
   Widget _infoField() {
-    if (_isJobTapped && _isJobSelected) {
+    if (_isChannelTapped && _isChannelSelected) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_registerController.jobType.contains(JobType.Youtuber))
+          if (_registerController.selectedChannelTypes.contains(ChannelType.Youtube))
             Column(
               children: [
                 RegisterInputField(title: '유튜브채널명', hintText: '유튜브 채널명을 입력해주세요', onChanged: (value) => _youtubeName = value),
                 RegisterInputField(title: '유튜브주소', hintText: '유튜브 주소를 입력해주세요', onChanged: (value) => _youtubeAddress = value),
               ],
             ),
-          if (_registerController.jobType.contains(JobType.Entertainer)) SizedBox(),
-          if (_registerController.jobType.contains(JobType.Influencer)) RegisterInputField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', onChanged: (value) => _snsAddress = value),
+          if (_registerController.selectedChannelTypes.contains(ChannelType.TV)) SizedBox(),
+          if (_registerController.selectedChannelTypes.contains(ChannelType.Blog)) SizedBox(),
+          if (_registerController.selectedChannelTypes.contains(ChannelType.SNS)) RegisterInputField(title: 'SNS주소', hintText: 'SNS 주소를 입력해주세요', onChanged: (value) => _snsAddress = value),
         ],
       );
     } else {
@@ -98,7 +98,7 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
     }
   }
 
-  Column _jobField(BuildContext context) {
+  Column _channelField(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,14 +106,14 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
           height: 44,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Text(
-            '직업',
+            '활동 채널',
             style: AppTextStyles.GS_subbody.copyWith(),
           ),
         ),
         InkWell(
           onTap: () {
             setState(() {
-              _isJobTapped = true;
+              _isChannelTapped = true;
             });
             AppUtil.showModalBottom(
               context: context,
@@ -123,12 +123,12 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
                 children: [
                   IconButton(onPressed: () => Get.back(), icon: ImageData(icon: IconPath.collapsed)),
                   Expanded(
-                    child: JobSelectView(
-                      onJobSelected: (selectedJobs) {
+                    child: StanChannelSelectView(
+                      onSelected: (selectedChannels) {
                         setState(() {
-                          _selectedJob = selectedJobs.map((job) => job.description()).join(', ');
+                          _selectedJob = selectedChannels.map((job) => job.description()).join(', ');
                         });
-                        _isJobSelected = true;
+                        _isChannelSelected = true;
                       },
                     ),
                   ),
@@ -156,7 +156,7 @@ class _RegisterTabStanState extends State<RegisterTabStan> {
             ),
           ),
         ),
-        if (!_isJobSelected && _isJobTapped)
+        if (!_isChannelSelected && _isChannelTapped)
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 8.0),
             child: Text(
