@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:stanfood/constants/enum_constant.dart';
 import 'package:stanfood/constants/icon_constant.dart';
 
-import '../../../../../controllers/register/register_controller.dart';
-import '../../../../../data/models/job_model.dart';
-import '../../../../../modules/common/image_data.dart';
-import '../../../../../constants/color_constant.dart';
-import '../../../../../constants/style_constant.dart';
-import '../../../../../modules/common/custom_button.dart';
+import '../../../../constants/color_constant.dart';
+import '../../../../constants/enum_constant.dart';
+import '../../../../constants/style_constant.dart';
+import '../../../../controllers/register/register_controller.dart';
+import '../../../../data/models/channel_model.dart';
+import '../../../../modules/common/custom_button.dart';
+import '../../../../modules/common/image_data.dart';
 
-class JobSelectView extends StatelessWidget {
-  final void Function(List<JobType> selectedJob) onJobSelected;
-  final bool? isToastHidden;
-
-  JobSelectView({
-    Key? key,
-    required this.onJobSelected,
-    this.isToastHidden,
-  }) : super(key: key);
+class BroadcastSelectView extends StatelessWidget {
+  BroadcastSelectView({super.key, required this.onSelected});
+  final void Function(ChannelType selectedChannel) onSelected;
 
   final _registerController = Get.put(RegisterController());
 
-  final List<Job> jobList = [
-    Job(type: JobType.Youtuber, icon: IconPath.youtuber),
-    Job(type: JobType.Entertainer, icon: IconPath.entertainer),
-    Job(type: JobType.Blogger, icon: IconPath.blogger),
-    Job(type: JobType.Influencer, icon: IconPath.influencer),
+  final List<Channel> broadcastList = [
+    Channel(type: ChannelType.TV, icon: IconPath.tv),
+    Channel(type: ChannelType.Youtube, icon: IconPath.youtube),
+    Channel(type: ChannelType.SNS, icon: IconPath.sns),
+    Channel(type: ChannelType.Blog, icon: IconPath.blog),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +36,9 @@ class JobSelectView extends StatelessWidget {
           elevation: 20,
           child: CustomButton(
             onTap: () {
-              onJobSelected(_registerController.jobType);
+              onSelected(_registerController.selectedChannelType.value);
               Fluttertoast.showToast(
-                msg: "직업이 선택되었습니다.",
+                msg: "방송이 선택되었습니다.",
                 backgroundColor: AppColor.blackText.withOpacity(0.5),
                 textColor: AppColor.whiteText,
                 toastLength: Toast.LENGTH_SHORT,
@@ -61,7 +54,7 @@ class JobSelectView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTitle(),
-              _buildJobGrid(),
+              _buildBroadcastGrid(),
             ],
           ),
         ));
@@ -74,12 +67,12 @@ class JobSelectView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '직업 선택',
+            '방송 선택',
             style: AppTextStyles.NN_title3.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16.0),
           Text(
-            '최대의 직업을 선택해주세요.',
+            '방송을 선택해주세요.',
             style: AppTextStyles.SYS_subbody.copyWith(
               color: AppColor.lightLabelSecondaryColor,
               fontWeight: FontWeight.w400,
@@ -90,11 +83,11 @@ class JobSelectView extends StatelessWidget {
     );
   }
 
-  Widget _buildJobGrid() {
+  Widget _buildBroadcastGrid() {
     return GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: jobList.length,
+        itemCount: broadcastList.length,
         // itemCount: _cities[country]!.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -103,10 +96,10 @@ class JobSelectView extends StatelessWidget {
           mainAxisSpacing: 8.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final job = jobList[index];
+          final broadcast = broadcastList[index];
           return GestureDetector(
             onTap: () {
-              _registerController.selectJobType(job.type);
+              _registerController.selectedChannelType(broadcast.type);
             },
             child: Obx(
               () => Stack(
@@ -117,7 +110,7 @@ class JobSelectView extends StatelessWidget {
                         color: AppColor.primary,
                         image: DecorationImage(
                           image: AssetImage(
-                            job.icon,
+                            broadcast.icon,
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -130,7 +123,7 @@ class JobSelectView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 13),
                             child: Text(
-                              job.type.description(),
+                              broadcast.type.description(),
                               style: AppTextStyles.NN_callout.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: AppColor.whiteText,
@@ -145,7 +138,7 @@ class JobSelectView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        gradient: _registerController.jobType.contains(job.type)
+                        gradient: _registerController.selectedChannelType.value == broadcast.type
                             ? LinearGradient(
                                 colors: AppGradients.gradientHealthy.colors.map((e) => e.withOpacity(.9)).toList(),
                               )
@@ -154,7 +147,7 @@ class JobSelectView extends StatelessWidget {
                                 Colors.transparent,
                               ]),
                       ),
-                      child: _registerController.jobType.contains(job.type)
+                      child: _registerController.selectedChannelType.value == broadcast.type
                           ? Stack(
                               children: [
                                 Center(
@@ -171,7 +164,7 @@ class JobSelectView extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(bottom: 16, left: 13),
                                         child: Text(
-                                          job.type.description(),
+                                          broadcast.type.description(),
                                           style: AppTextStyles.NN_callout.copyWith(fontWeight: FontWeight.w700, color: AppColor.blackText),
                                         ),
                                       ),

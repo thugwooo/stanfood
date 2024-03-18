@@ -2,21 +2,21 @@ enum BottomNaviType { Home, Map, Register }
 
 enum RegisterTabType { Main, Stan, Restaurant, BroadCast, Mukbang }
 
-enum JobType { Youtuber, Entertainer, Blogger, Influencer }
+enum ChannelType { TV, Youtube, SNS, Blog }
 
-extension JobTypeExtension on JobType {
+extension ActiveChannelExtension on ChannelType {
   String description() {
     switch (this) {
-      case JobType.Youtuber:
-        return '유튜버';
-      case JobType.Entertainer:
-        return '연예인';
-      case JobType.Blogger:
-        return '블로거';
-      case JobType.Influencer:
-        return '인플루언서';
+      case ChannelType.TV:
+        return 'TV';
+      case ChannelType.Youtube:
+        return '유튜브';
+      case ChannelType.SNS:
+        return 'SNS';
+      case ChannelType.Blog:
+        return '블로그';
       default:
-        return '알 수 없음';
+        return '';
     }
   }
 }
